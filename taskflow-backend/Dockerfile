@@ -6,7 +6,10 @@ COPY src ./src
 RUN mvn package -DskipTests -B
 
 FROM eclipse-temurin:17-jre-alpine
+LABEL maintainer="haowu6666"
+LABEL org.opencontainers.image.source="https://github.com/haowu6666/TaskFlow"
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENV JAVA_OPTS=""
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

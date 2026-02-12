@@ -27,7 +27,7 @@ mybatis-plus:
       logic-not-delete-value: 0
 
 jwt:
-  secret: TaskFlowSecretKeyForJWTTokenGenerationMustBeLongEnough2024!@#$%
+  secret: ${JWT_SECRET:TaskFlowSecretKeyForJWTTokenGenerationMustBeLongEnough2024!@#$%}
   access-token-expiration: 1800000
   refresh-token-expiration: 604800000
 

@@ -21,9 +21,7 @@ services:
     restart: unless-stopped
 
   backend:
-    build:
-      context: ./taskflow-backend
-      dockerfile: Dockerfile
+    image: haowu6666/taskflow-backend:latest
     container_name: taskflow-backend
     ports:
       - "${BACKEND_PORT:-8080}:8080"
@@ -31,7 +29,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/taskflow?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-      JWT_SECRET: ${JWT_SECRET:-TaskFlowSecretKeyForJWTTokenGenerationMustBeLongEnough2024!@#}
+      JWT_SECRET: ${JWT_SECRET:-TaskFlowSecretKeyForJWTTokenGenerationMustBeLongEnough2024}
       JAVA_OPTS: "-Xms256m -Xmx512m"
     depends_on:
       mysql:
@@ -41,9 +39,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./taskflow-frontend
-      dockerfile: Dockerfile
+    image: haowu6666/taskflow-frontend:latest
     container_name: taskflow-frontend
     ports:
       - "${FRONTEND_PORT:-80}:80"
