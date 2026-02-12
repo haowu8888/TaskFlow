@@ -14,7 +14,7 @@
               <el-input v-model="wsForm.description" type="textarea" :rows="3" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="saveWorkspace" :loading="saving">{{ $t('workspace.saveChanges') }}</el-button>
+              <el-button type="primary" @click="saveWorkspace" :loading="saving" :disabled="!canAdmin">{{ $t('workspace.saveChanges') }}</el-button>
             </el-form-item>
           </el-form>
         </el-card>
@@ -23,7 +23,7 @@
           <template #header>
             <div class="flex-between">
               <span class="card-title">{{ $t('workspace.members') }}</span>
-              <el-button type="primary" size="small" @click="showInvite = true">
+              <el-button v-if="canAdmin" type="primary" size="small" @click="showInvite = true">
                 <el-icon><Plus /></el-icon> {{ $t('common.invite') }}
               </el-button>
             </div>
@@ -42,7 +42,7 @@
             </el-table-column>
             <el-table-column :label="$t('workspace.role')" width="160">
               <template #default="{ row }">
-                <el-select v-model="row.role" size="small" @change="updateRole(row.userId, row.role)" :disabled="row.role === 'OWNER'">
+                <el-select v-model="row.role" size="small" @change="updateRole(row.userId, row.role)" :disabled="row.role === 'OWNER' || !canAdmin">
                   <el-option :label="$t('role.owner')" value="OWNER" disabled />
                   <el-option :label="$t('role.admin')" value="ADMIN" />
                   <el-option :label="$t('role.member')" value="MEMBER" />
@@ -57,7 +57,7 @@
             </el-table-column>
             <el-table-column label="" width="60">
               <template #default="{ row }">
-                <el-button v-if="row.role !== 'OWNER'" type="danger" link size="small" @click="removeMember(row.userId)">
+                <el-button v-if="row.role !== 'OWNER' && canAdmin" type="danger" link size="small" @click="removeMember(row.userId)">
                   <el-icon><Delete /></el-icon>
                 </el-button>
               </template>
@@ -89,7 +89,7 @@
           </el-button>
         </el-card>
 
-        <el-card shadow="never">
+        <el-card v-if="isOwner" shadow="never">
           <template #header><span class="card-title danger-text">{{ $t('workspace.dangerZone') }}</span></template>
           <p class="text-secondary" style="margin-bottom: 12px;">{{ $t('workspace.deleteWarning') }}</p>
           <el-button type="danger" @click="deleteWorkspace">{{ $t('workspace.deleteWorkspace') }}</el-button>
@@ -154,12 +154,14 @@ import { Plus, Delete } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import dayjs from 'dayjs'
 import { useWorkspaceStore } from '@/stores/workspace'
+import { usePermission } from '@/composables/usePermission'
 import { workspaceApi } from '@/api/workspace'
 import { authApi } from '@/api/auth'
 import type { User, Workspace, MemberRole } from '@/types'
 
 const { t } = useI18n()
 const workspaceStore = useWorkspaceStore()
+const { canEdit, canAdmin, isOwner } = usePermission()
 const saving = ref(false)
 const showInvite = ref(false)
 const showCreateWs = ref(false)
@@ -261,35 +263,37 @@ onMounted(loadSettings)
 </script>
 
 <style lang="scss" scoped>
-.page-title { font-size: 24px; margin-bottom: 24px; }
-.card-title { font-weight: 600; }
-.danger-text { color: #F56C6C; }
-.text-secondary { color: #909399; font-size: 13px; }
+.page-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; color: var(--tf-text-primary); }
+.card-title { font-weight: 600; color: var(--tf-text-primary); }
+.danger-text { color: var(--tf-color-danger); }
+.text-secondary { color: var(--tf-text-secondary); font-size: 13px; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
 .mb-16 { margin-bottom: 16px; }
 
 .member-cell { display: flex; align-items: center; gap: 10px; }
-.member-name { font-weight: 500; font-size: 14px; }
-.member-email { color: #909399; font-size: 12px; }
+.member-name { font-weight: 500; font-size: 14px; color: var(--tf-text-primary); }
+.member-email { color: var(--tf-text-secondary); font-size: 12px; }
 
 .workspace-list { }
 .workspace-item {
   display: flex; align-items: center; gap: 12px; padding: 10px 12px;
-  border-radius: 8px; cursor: pointer; transition: background 0.2s;
-  &:hover { background: #F5F7FA; }
-  &.active { background: #ECF5FF; }
+  border-radius: var(--tf-radius-md); cursor: pointer; transition: all var(--tf-transition-fast);
+  &:hover { background: var(--tf-bg-card-hover); }
+  &.active { background: var(--tf-color-primary-light); }
 }
 .ws-icon {
-  width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #667eea, #764ba2);
+  width: 36px; height: 36px; border-radius: var(--tf-radius-sm);
+  background: var(--tf-gradient-primary);
   color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600;
 }
 .ws-info { flex: 1; }
-.ws-name { font-weight: 500; }
-.ws-members { color: #909399; font-size: 12px; }
+.ws-name { font-weight: 500; color: var(--tf-text-primary); }
+.ws-members { color: var(--tf-text-secondary); font-size: 12px; }
 
 .search-results { max-height: 200px; overflow-y: auto; margin-bottom: 12px; }
 .search-result-item {
-  display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; cursor: pointer;
-  &:hover { background: #F5F7FA; }
+  display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: var(--tf-radius-sm); cursor: pointer;
+  transition: background var(--tf-transition-fast);
+  &:hover { background: var(--tf-bg-card-hover); }
 }
 </style>

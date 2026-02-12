@@ -74,7 +74,9 @@ export default {
     myTasks: '我的任务',
     noTasks: '暂无分配给你的任务',
     upcomingDeadlines: '即将到期',
-    noDeadlines: '暂无即将到期的任务'
+    noDeadlines: '暂无即将到期的任务',
+    statusDistribution: '状态分布',
+    priorityDistribution: '优先级分布'
   },
   task: {
     title: '任务',
@@ -107,7 +109,18 @@ export default {
     searchTasks: '搜索任务...',
     sortBy: '排序',
     created: '创建时间',
-    noDate: '-'
+    noDate: '-',
+    boardColumn: '看板列',
+    selectBoardColumn: '选择看板列（可选）',
+    taskUpdated: '任务更新成功',
+    commentUpdated: '评论更新成功',
+    dependencies: '依赖关系',
+    blockedBy: '被阻塞于',
+    blocks: '阻塞',
+    noDependencies: '暂无依赖关系',
+    searchTaskToLink: '搜索任务进行关联...',
+    dependencyAdded: '依赖关系已添加',
+    dependencyRemoved: '依赖关系已移除'
   },
   board: {
     title: '看板',
@@ -133,7 +146,11 @@ export default {
     columnAdded: '列添加成功',
     columnUpdated: '列更新成功',
     columnDeleted: '列删除成功',
-    wip: 'WIP'
+    wip: 'WIP',
+    editBoard: '编辑看板',
+    boardUpdated: '看板更新成功',
+    deleteBoardConfirm: '确定要删除此看板吗？看板中的所有列和任务关联将被移除。',
+    boardDeleted: '看板删除成功'
   },
   calendar: {
     title: '日历',
@@ -154,7 +171,18 @@ export default {
     email: '邮箱',
     avatarUrl: '头像链接',
     enterAvatarUrl: '请输入头像链接',
-    profileUpdated: '资料更新成功'
+    profileUpdated: '资料更新成功',
+    basicInfo: '基本信息',
+    security: '安全设置',
+    currentPassword: '当前密码',
+    newPassword: '新密码',
+    confirmPassword: '确认密码',
+    enterCurrentPassword: '请输入当前密码',
+    enterNewPassword: '请输入新密码',
+    confirmNewPassword: '再次输入新密码',
+    changePassword: '修改密码',
+    passwordMismatch: '两次输入的密码不一致',
+    passwordChanged: '密码修改成功'
   },
   workspace: {
     title: '工作空间设置',
@@ -203,5 +231,24 @@ export default {
     admin: '管理员',
     member: '成员',
     viewer: '观察者'
+  },
+  search: {
+    placeholder: '搜索任务...',
+    noResults: '未找到相关任务',
+    navigate: '导航',
+    select: '选择'
+  },
+  label: {
+    labels: '标签',
+    addLabel: '添加标签',
+    searchOrCreate: '搜索或创建标签...',
+    create: '创建'
+  },
+  activity: {
+    title: '活动记录',
+    created: '创建了任务',
+    updated: '更新了',
+    deleted: '删除了任务',
+    noActivities: '暂无活动记录'
   }
 }

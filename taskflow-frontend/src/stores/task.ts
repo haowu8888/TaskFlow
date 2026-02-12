@@ -10,6 +10,18 @@ export const useTaskStore = defineStore('task', () => {
   const pagination = ref({ total: 0, current: 1, size: 20, pages: 0 })
   const loading = ref(false)
   const lastFilterParams = ref<TaskFilterParams | undefined>()
+  const taskEventVersion = ref(0)
+
+  function notifyTaskChange() {
+    taskEventVersion.value++
+  }
+
+  function updateTaskInList(taskId: number, partialData: Partial<Task>) {
+    const index = tasks.value.findIndex(t => t.id === taskId)
+    if (index !== -1) {
+      tasks.value[index] = { ...tasks.value[index], ...partialData }
+    }
+  }
 
   async function fetchTasks(workspaceId: number, params?: TaskFilterParams) {
     loading.value = true
@@ -32,18 +44,22 @@ export const useTaskStore = defineStore('task', () => {
 
   async function createTask(workspaceId: number, data: TaskCreateRequest) {
     const res = await taskApi.create(workspaceId, data)
+    notifyTaskChange()
     return res.data
   }
 
   async function updateTask(taskId: number, data: TaskUpdateRequest) {
     const res = await taskApi.update(taskId, data)
     currentTask.value = res.data
+    updateTaskInList(taskId, res.data)
+    notifyTaskChange()
     return res.data
   }
 
   async function deleteTask(taskId: number) {
     await taskApi.delete(taskId)
     tasks.value = tasks.value.filter(t => t.id !== taskId)
+    notifyTaskChange()
   }
 
   async function refreshCurrentView() {
@@ -53,5 +69,5 @@ export const useTaskStore = defineStore('task', () => {
     }
   }
 
-  return { tasks, currentTask, pagination, loading, fetchTasks, fetchTask, createTask, updateTask, deleteTask, refreshCurrentView }
+  return { tasks, currentTask, pagination, loading, taskEventVersion, fetchTasks, fetchTask, createTask, updateTask, deleteTask, refreshCurrentView, notifyTaskChange, updateTaskInList }
 })

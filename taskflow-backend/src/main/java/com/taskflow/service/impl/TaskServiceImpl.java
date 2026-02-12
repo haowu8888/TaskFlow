@@ -10,16 +10,22 @@ import com.taskflow.dto.response.SubtaskResponse;
 import com.taskflow.dto.response.TaskListResponse;
 import com.taskflow.dto.response.TaskResponse;
 import com.taskflow.dto.response.UserResponse;
+import com.taskflow.dto.response.LabelResponse;
 import com.taskflow.entity.Comment;
 import com.taskflow.entity.Subtask;
 import com.taskflow.entity.Task;
 import com.taskflow.entity.User;
+import com.taskflow.entity.TaskLabel;
+import com.taskflow.entity.Label;
 import com.taskflow.exception.BusinessException;
 import com.taskflow.mapper.CommentMapper;
 import com.taskflow.mapper.SubtaskMapper;
 import com.taskflow.mapper.TaskMapper;
 import com.taskflow.mapper.UserMapper;
+import com.taskflow.mapper.TaskLabelMapper;
+import com.taskflow.mapper.LabelMapper;
 import com.taskflow.service.TaskService;
+import com.taskflow.service.TaskActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +45,9 @@ public class TaskServiceImpl implements TaskService {
     private final UserMapper userMapper;
     private final SubtaskMapper subtaskMapper;
     private final CommentMapper commentMapper;
+    private final TaskLabelMapper taskLabelMapper;
+    private final LabelMapper labelMapper;
+    private final TaskActivityService taskActivityService;
 
     @Override
     @Transactional
@@ -292,6 +301,26 @@ public class TaskServiceImpl implements TaskService {
         commentQuery.eq(Comment::getTaskId, task.getId());
         Long commentCount = commentMapper.selectCount(commentQuery);
         response.setCommentCount(commentCount.intValue());
+
+        // Fetch labels
+        LambdaQueryWrapper<TaskLabel> labelQuery = new LambdaQueryWrapper<>();
+        labelQuery.eq(TaskLabel::getTaskId, task.getId());
+        List<TaskLabel> taskLabels = taskLabelMapper.selectList(labelQuery);
+        List<LabelResponse> labelResponses = taskLabels.stream()
+                .map(tl -> {
+                    Label label = labelMapper.selectById(tl.getLabelId());
+                    if (label == null) return null;
+                    LabelResponse lr = new LabelResponse();
+                    lr.setId(label.getId());
+                    lr.setWorkspaceId(label.getWorkspaceId());
+                    lr.setName(label.getName());
+                    lr.setColor(label.getColor());
+                    lr.setCreatedAt(label.getCreatedAt());
+                    return lr;
+                })
+                .filter(r -> r != null)
+                .collect(Collectors.toList());
+        response.setLabels(labelResponses);
 
         return response;
     }

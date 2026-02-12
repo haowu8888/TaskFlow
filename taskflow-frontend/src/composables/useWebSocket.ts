@@ -72,8 +72,16 @@ export function useWebSocket() {
 
     workspaceSubscription = stompClient.subscribe(
       `/topic/workspace/${workspaceId}/tasks`,
-      (_message: IMessage) => {
-        // Refresh task list when a task is updated by another user
+      (message: IMessage) => {
+        try {
+          const taskData = JSON.parse(message.body)
+          if (taskData && taskData.id) {
+            taskStore.updateTaskInList(taskData.id, taskData)
+          }
+        } catch {
+          // Message body is not task JSON, ignore parse error
+        }
+        taskStore.notifyTaskChange()
         taskStore.refreshCurrentView()
       }
     )

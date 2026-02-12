@@ -10,6 +10,11 @@
       </el-breadcrumb>
     </div>
     <div class="header-right">
+      <div class="search-trigger" @click="showSearch = true">
+        <el-icon :size="14"><Search /></el-icon>
+        <span class="search-trigger-text">{{ $t('search.placeholder') }}</span>
+        <kbd class="search-trigger-kbd">Ctrl+K</kbd>
+      </div>
       <el-tooltip :content="$t('header.switchLang')" placement="bottom">
         <el-icon class="header-icon" :size="20" @click="toggleLocale">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor">
@@ -46,7 +51,7 @@
         <el-button type="primary" link @click="notificationStore.markAllAsRead" :disabled="notificationStore.unreadCount === 0">{{ $t('header.markAllRead') }}</el-button>
       </div>
       <div class="notification-list">
-        <div v-for="n in notificationStore.notifications" :key="n.id" class="notification-item" :class="{ unread: !n.isRead }" @click="notificationStore.markAsRead(n.id)">
+        <div v-for="n in notificationStore.notifications" :key="n.id" class="notification-item" :class="{ unread: !n.isRead }" @click="handleNotificationClick(n)">
           <div class="notification-title">{{ n.title }}</div>
           <div class="notification-content" v-if="n.content">{{ n.content }}</div>
           <div class="notification-time">{{ formatTime(n.createdAt) }}</div>
@@ -54,17 +59,20 @@
         <el-empty v-if="notificationStore.notifications.length === 0" :description="$t('header.noNotifications')" />
       </div>
     </el-drawer>
+    <GlobalSearch v-model="showSearch" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Fold, Expand, Bell, Sunny, Moon } from '@element-plus/icons-vue'
+import { Fold, Expand, Bell, Sunny, Moon, Search } from '@element-plus/icons-vue'
 import { useAppStore } from '@/stores/app'
 import { useAuthStore } from '@/stores/auth'
 import { useNotificationStore } from '@/stores/notification'
+import GlobalSearch from '@/components/common/GlobalSearch.vue'
+import type { Notification } from '@/types'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
@@ -77,6 +85,22 @@ const appStore = useAppStore()
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
 const showNotifications = ref(false)
+const showSearch = ref(false)
+
+function handleKeyDown(e: KeyboardEvent) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault()
+    showSearch.value = true
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+})
 const routeNameMap: Record<string, string> = {
   Dashboard: 'sidebar.dashboard',
   Tasks: 'sidebar.tasks',
@@ -110,23 +134,72 @@ function toggleLocale() {
   locale.value = newLocale
   localStorage.setItem('locale', newLocale)
 }
+
+function handleNotificationClick(n: Notification) {
+  if (!n.isRead) {
+    notificationStore.markAsRead(n.id)
+  }
+  showNotifications.value = false
+  if (n.type === 'MEMBER_INVITED') {
+    router.push('/workspace/settings')
+  } else if (n.referenceId) {
+    router.push(`/tasks?taskId=${n.referenceId}`)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-.app-header { height: 56px; background: #fff; border-bottom: 1px solid #EBEEF5; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; flex-shrink: 0; }
+.app-header {
+  height: 56px; background: var(--tf-bg-card); border-bottom: 1px solid var(--tf-border-color-lighter);
+  display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0;
+  backdrop-filter: blur(8px); background: rgba(var(--tf-bg-card), 0.8);
+}
 .header-left { display: flex; align-items: center; gap: 16px; }
-.collapse-btn { cursor: pointer; color: #606266; &:hover { color: #409EFF; } }
-.header-right { display: flex; align-items: center; gap: 20px; }
-.header-icon { cursor: pointer; color: #606266; &:hover { color: #409EFF; } }
-.user-info { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-.username { font-size: 14px; color: #303133; }
+.collapse-btn {
+  cursor: pointer; color: var(--tf-text-secondary); transition: all var(--tf-transition-fast);
+  padding: 6px; border-radius: var(--tf-radius-sm);
+  &:hover { color: var(--tf-color-primary); background: var(--tf-color-primary-lighter); }
+}
+.header-right { display: flex; align-items: center; gap: 8px; }
+.search-trigger {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: var(--tf-radius-sm);
+  border: 1px solid var(--tf-border-color-lighter);
+  cursor: pointer; transition: all var(--tf-transition-fast);
+  margin-right: 4px;
+  &:hover { border-color: var(--tf-color-primary); background: var(--tf-color-primary-lighter); }
+}
+.search-trigger-text {
+  font-size: 13px; color: var(--tf-text-placeholder); white-space: nowrap;
+}
+.search-trigger-kbd {
+  padding: 1px 5px; font-size: 11px;
+  background: var(--tf-bg-card-hover); border: 1px solid var(--tf-border-color-light);
+  border-radius: 4px; color: var(--tf-text-secondary); font-family: inherit;
+}
+.header-icon {
+  cursor: pointer; color: var(--tf-text-secondary); transition: all var(--tf-transition-fast);
+  padding: 8px; border-radius: var(--tf-radius-sm);
+  &:hover { color: var(--tf-color-primary); background: var(--tf-color-primary-lighter); }
+}
+.user-info {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 4px 8px 4px 4px; border-radius: 20px; transition: background var(--tf-transition-fast);
+  &:hover { background: var(--tf-bg-card-hover); }
+}
+.username { font-size: 14px; color: var(--tf-text-primary); font-weight: 500; }
 .notification-header { display: flex; justify-content: flex-end; margin-bottom: 12px; }
 .notification-item {
-  padding: 12px; border-bottom: 1px solid #EBEEF5; cursor: pointer; transition: background 0.2s;
-  &:hover { background: #F5F7FA; }
-  &.unread { background: #ECF5FF; }
+  padding: 14px 16px; border-radius: var(--tf-radius-md); cursor: pointer;
+  transition: all var(--tf-transition-fast); margin-bottom: 8px;
+  border: 1px solid var(--tf-border-color-lighter);
+  &:hover { background: var(--tf-bg-card-hover); border-color: var(--tf-border-color-light); }
+  &.unread {
+    background: var(--tf-color-primary-lighter);
+    border-color: var(--tf-color-primary-light);
+  }
 }
-.notification-title { font-weight: 500; margin-bottom: 4px; }
-.notification-content { color: #909399; font-size: 13px; margin-bottom: 4px; }
-.notification-time { color: #C0C4CC; font-size: 12px; }
+.notification-title { font-weight: 500; margin-bottom: 4px; color: var(--tf-text-primary); font-size: 14px; }
+.notification-content { color: var(--tf-text-secondary); font-size: 13px; margin-bottom: 6px; line-height: 1.5; }
+.notification-time { color: var(--tf-text-placeholder); font-size: 12px; }
 </style>

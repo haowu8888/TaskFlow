@@ -66,17 +66,18 @@ async function deleteSubtask(id: number) {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid #EBEEF5;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--tf-border-color-lighter);
 }
 
 .subtask-title {
   flex: 1;
   font-size: 13px;
+  color: var(--tf-text-primary);
 
   &.completed {
     text-decoration: line-through;
-    color: #C0C4CC;
+    color: var(--tf-text-placeholder);
   }
 }
 

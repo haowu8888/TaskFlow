@@ -22,8 +22,11 @@ const appStore = useAppStore()
 .main-layout { display: flex; height: 100vh; overflow: hidden; }
 .main-content {
   flex: 1; display: flex; flex-direction: column;
-  margin-left: 240px; transition: margin-left 0.3s ease; overflow: hidden;
+  margin-left: 240px; transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;
   &.sidebar-collapsed { margin-left: 64px; }
 }
-.page-content { flex: 1; padding: 20px; overflow-y: auto; background-color: #F5F7FA; }
+.page-content {
+  flex: 1; padding: 24px 28px; overflow-y: auto;
+  background-color: var(--tf-bg-page);
+}
 </style>

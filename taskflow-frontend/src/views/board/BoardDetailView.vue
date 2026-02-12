@@ -10,9 +10,14 @@
           {{ boardStore.currentBoard.description }}
         </el-tag>
       </div>
-      <el-button @click="showAddColumn = true">
-        <el-icon><Plus /></el-icon> {{ $t('board.addColumn') }}
-      </el-button>
+      <div class="header-actions">
+        <el-button v-if="canEdit" type="primary" @click="openCreateTask()">
+          <el-icon><Plus /></el-icon> {{ $t('task.newTask') }}
+        </el-button>
+        <el-button v-if="canAdmin" @click="showAddColumn = true">
+          <el-icon><Plus /></el-icon> {{ $t('board.addColumn') }}
+        </el-button>
+      </div>
     </div>
 
     <div class="kanban-container" v-loading="boardStore.loading">
@@ -34,6 +39,7 @@
           @task-moved="handleTaskMoved"
           @edit-column="handleEditColumn"
           @delete-column="handleDeleteColumn"
+          @add-task="openCreateTaskForColumn"
         />
       </VueDraggable>
 
@@ -89,11 +95,18 @@
       @updated="loadBoard"
       @deleted="loadBoard"
     />
+
+    <TaskCreateModal
+      v-model="showCreateTask"
+      :board-column-id="createTaskColumnId"
+      :board-columns="columns"
+      @created="handleBoardTaskCreated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ArrowLeft, Plus } from '@element-plus/icons-vue'
@@ -101,7 +114,10 @@ import { VueDraggable } from 'vue-draggable-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import KanbanColumn from '@/components/board/KanbanColumn.vue'
 import TaskDetailDrawer from '@/components/task/TaskDetailDrawer.vue'
+import TaskCreateModal from '@/components/task/TaskCreateModal.vue'
 import { useBoardStore } from '@/stores/board'
+import { useTaskStore } from '@/stores/task'
+import { usePermission } from '@/composables/usePermission'
 import { boardApi } from '@/api/board'
 import { taskApi } from '@/api/task'
 import type { Task, BoardColumn } from '@/types'
@@ -110,19 +126,25 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const boardStore = useBoardStore()
+const taskStore = useTaskStore()
+const { canEdit, canAdmin } = usePermission()
 
 const boardId = ref(0)
 const columns = ref<BoardColumn[]>([])
 const showAddColumn = ref(false)
 const showEditColumn = ref(false)
 const showTaskDetail = ref(false)
+const showCreateTask = ref(false)
 const selectedTaskId = ref(0)
 const addingColumn = ref(false)
 const updatingColumn = ref(false)
 const editingColumnId = ref(0)
+const createTaskColumnId = ref<number | undefined>(undefined)
 
-const colForm = reactive({ name: '', color: '#409EFF', wipLimit: 0 })
-const editColForm = reactive({ name: '', color: '#409EFF', wipLimit: 0 })
+const colForm = reactive({ name: '', color: '#165DFF', wipLimit: 0 })
+const editColForm = reactive({ name: '', color: '#165DFF', wipLimit: 0 })
+
+let reloadTimer: ReturnType<typeof setTimeout> | null = null
 
 async function loadBoard() {
   const id = Number(route.params.id)
@@ -137,6 +159,14 @@ async function loadBoard() {
   }
 }
 
+// Watch taskEventVersion to reload board (debounced 2s)
+watch(() => taskStore.taskEventVersion, () => {
+  if (reloadTimer) clearTimeout(reloadTimer)
+  reloadTimer = setTimeout(() => {
+    loadBoard()
+  }, 2000)
+})
+
 async function addColumn() {
   if (!colForm.name.trim()) return
   addingColumn.value = true
@@ -149,7 +179,7 @@ async function addColumn() {
     ElMessage.success(t('board.columnAdded'))
     showAddColumn.value = false
     colForm.name = ''
-    colForm.color = '#409EFF'
+    colForm.color = '#165DFF'
     colForm.wipLimit = 0
     await loadBoard()
   } catch {
@@ -215,7 +245,9 @@ async function handleColumnReorder() {
 
 async function handleTaskMoved(taskId: number, columnId: number, position: number) {
   try {
-    await taskApi.move(taskId, { boardColumnId: columnId, position })
+    const res = await taskApi.move(taskId, { boardColumnId: columnId, position })
+    taskStore.updateTaskInList(taskId, res.data)
+    taskStore.notifyTaskChange()
   } catch {
     await loadBoard()
   }
@@ -226,17 +258,34 @@ function openTask(task: Task) {
   showTaskDetail.value = true
 }
 
+function openCreateTask() {
+  createTaskColumnId.value = columns.value.length > 0 ? columns.value[0].id : undefined
+  showCreateTask.value = true
+}
+
+function openCreateTaskForColumn(columnId: number) {
+  createTaskColumnId.value = columnId
+  showCreateTask.value = true
+}
+
+function handleBoardTaskCreated() {
+  showCreateTask.value = false
+  loadBoard()
+}
+
 onMounted(loadBoard)
 </script>
 
 <style lang="scss" scoped>
 .page-header {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .page-title {
   font-size: 24px;
+  font-weight: 700;
   margin: 0;
+  color: var(--tf-text-primary);
 }
 
 .flex-between {
@@ -249,6 +298,11 @@ onMounted(loadBoard)
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .kanban-container {
@@ -272,14 +326,14 @@ onMounted(loadBoard)
 
 .ghost-column {
   opacity: 0.5;
-  background: #ECF5FF;
-  border: 2px dashed #409EFF;
-  border-radius: 8px;
+  background: var(--tf-bg-card-hover);
+  border: 2px dashed var(--tf-color-primary);
+  border-radius: var(--tf-radius-md);
 }
 
 .wip-hint {
   margin-left: 8px;
   font-size: 12px;
-  color: #909399;
+  color: var(--tf-text-secondary);
 }
 </style>

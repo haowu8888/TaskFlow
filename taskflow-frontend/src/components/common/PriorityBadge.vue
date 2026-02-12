@@ -1,5 +1,5 @@
 <template>
-  <el-tag :type="tagType" size="small" effect="dark">{{ label }}</el-tag>
+  <el-tag :type="tagType" size="small" effect="dark" round>{{ label }}</el-tag>
 </template>
 
 <script setup lang="ts">

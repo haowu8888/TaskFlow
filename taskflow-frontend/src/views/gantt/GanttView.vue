@@ -51,10 +51,12 @@ import dayjs from 'dayjs'
 import PriorityBadge from '@/components/common/PriorityBadge.vue'
 import TaskDetailDrawer from '@/components/task/TaskDetailDrawer.vue'
 import { useWorkspaceStore } from '@/stores/workspace'
+import { useTaskStore } from '@/stores/task'
 import { taskApi } from '@/api/task'
 import type { Task } from '@/types'
 
 const workspaceStore = useWorkspaceStore()
+const taskStore = useTaskStore()
 const { t } = useI18n()
 const loading = ref(false)
 const tasks = ref<Task[]>([])
@@ -120,12 +122,13 @@ function openTask(task: Task) {
 }
 
 watch(() => workspaceStore.currentWorkspace, loadTasks)
+watch(() => taskStore.taskEventVersion, loadTasks)
 onMounted(loadTasks)
 </script>
 
 <style lang="scss" scoped>
-.page-header { margin-bottom: 16px; }
-.page-title { font-size: 24px; }
+.page-header { margin-bottom: 20px; }
+.page-title { font-size: 24px; font-weight: 700; color: var(--tf-text-primary); }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
 
 .gantt-card { overflow: hidden; }
@@ -135,21 +138,21 @@ onMounted(loadTasks)
 
 .gantt-header-row {
   display: flex;
-  border-bottom: 2px solid #DCDFE6;
+  border-bottom: 2px solid var(--tf-border-color);
   position: sticky;
   top: 0;
-  background: #fff;
+  background: var(--tf-bg-card);
   z-index: 1;
 }
 
 .gantt-task-info-header {
   min-width: 220px;
   max-width: 220px;
-  padding: 8px 12px;
+  padding: 10px 12px;
   font-weight: 600;
   font-size: 13px;
-  color: #606266;
-  border-right: 1px solid #EBEEF5;
+  color: var(--tf-text-regular);
+  border-right: 1px solid var(--tf-border-color-lighter);
 }
 
 .gantt-timeline-header {
@@ -161,18 +164,20 @@ onMounted(loadTasks)
   min-width: 40px;
   max-width: 40px;
   text-align: center;
-  padding: 8px 0;
+  padding: 10px 0;
   font-size: 11px;
-  color: #909399;
-  border-right: 1px solid #F0F2F5;
-  &.weekend { background: #FAFAFA; color: #C0C4CC; }
+  font-weight: 500;
+  color: var(--tf-text-secondary);
+  border-right: 1px solid var(--tf-border-color-lighter);
+  &.weekend { background: var(--tf-bg-card-hover); color: var(--tf-text-placeholder); }
 }
 
 .gantt-row {
   display: flex;
-  border-bottom: 1px solid #EBEEF5;
+  border-bottom: 1px solid var(--tf-border-color-lighter);
   cursor: pointer;
-  &:hover { background: #F5F7FA; }
+  transition: background var(--tf-transition-fast);
+  &:hover { background: var(--tf-bg-card-hover); }
 }
 
 .gantt-task-info {
@@ -182,10 +187,10 @@ onMounted(loadTasks)
   display: flex;
   align-items: center;
   gap: 8px;
-  border-right: 1px solid #EBEEF5;
+  border-right: 1px solid var(--tf-border-color-lighter);
 }
 
-.gantt-task-name { font-size: 13px; }
+.gantt-task-name { font-size: 13px; color: var(--tf-text-primary); font-weight: 500; }
 
 .gantt-timeline {
   display: flex;
@@ -196,24 +201,28 @@ onMounted(loadTasks)
 .gantt-cell {
   min-width: 40px;
   max-width: 40px;
-  border-right: 1px solid #F0F2F5;
-  &.weekend { background: #FAFAFA; }
+  border-right: 1px solid var(--tf-border-color-lighter);
+  &.weekend { background: var(--tf-bg-card-hover); }
 }
 
 .gantt-bar {
   position: absolute;
   top: 6px;
   height: 24px;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   display: flex;
   align-items: center;
   z-index: 1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: box-shadow var(--tf-transition-fast);
 
-  &.priority-urgent { background: #F56C6C; }
-  &.priority-high { background: #E6A23C; }
-  &.priority-medium { background: #409EFF; }
-  &.priority-low { background: #909399; }
+  &:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+
+  &.priority-urgent { background: var(--tf-color-danger); }
+  &.priority-high { background: var(--tf-color-warning); }
+  &.priority-medium { background: var(--tf-color-primary); }
+  &.priority-low { background: var(--tf-text-secondary); }
 }
 
 .gantt-bar-progress {
@@ -221,11 +230,12 @@ onMounted(loadTasks)
   left: 0;
   top: 0;
   height: 100%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 6px 0 0 6px;
 }
 
 .gantt-bar-label {
-  padding: 0 6px;
+  padding: 0 8px;
   font-size: 11px;
   color: #fff;
   white-space: nowrap;
@@ -233,5 +243,6 @@ onMounted(loadTasks)
   text-overflow: ellipsis;
   position: relative;
   z-index: 1;
+  font-weight: 500;
 }
 </style>

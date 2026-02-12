@@ -1,9 +1,146 @@
-.el-button { border-radius: 6px; }
-.el-card { border-radius: 8px; border: 1px solid #EBEEF5; }
-.el-dialog { border-radius: 12px; }
+// Element Plus component overrides
+
+// Buttons
+.el-button {
+  border-radius: var(--tf-radius-sm);
+  transition: all var(--tf-transition-fast);
+  font-weight: 500;
+
+  &--primary {
+    background: var(--tf-color-primary);
+    border-color: var(--tf-color-primary);
+    &:hover, &:focus {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(22, 93, 255, 0.35);
+    }
+    &:active { transform: translateY(0); }
+  }
+
+  &--danger:not(.is-plain) {
+    &:hover {
+      box-shadow: 0 4px 12px rgba(245, 63, 63, 0.35);
+    }
+  }
+}
+
+// Cards
+.el-card {
+  border-radius: var(--tf-radius-lg);
+  border: 1px solid var(--tf-border-color-lighter);
+  box-shadow: var(--tf-shadow-card);
+  transition: box-shadow var(--tf-transition-normal), border-color var(--tf-transition-normal);
+
+  &.is-hover-shadow:hover,
+  &[shadow="hover"]:hover {
+    box-shadow: var(--tf-shadow-hover);
+    border-color: var(--tf-border-color);
+  }
+}
+
+// Dialogs
+.el-dialog {
+  border-radius: var(--tf-radius-lg);
+  overflow: hidden;
+  .el-dialog__header {
+    padding: 20px 24px 16px;
+  }
+  .el-dialog__body {
+    padding: 8px 24px 20px;
+  }
+}
+
+// Drawer
 .el-drawer {
-  .el-drawer__header { margin-bottom: 0; padding: 16px 20px; border-bottom: 1px solid #EBEEF5; }
+  .el-drawer__header {
+    margin-bottom: 0;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--tf-border-color-lighter);
+    font-weight: 600;
+  }
   .el-drawer__body { padding: 20px; }
 }
-.el-table .el-table__header th { background-color: #F5F7FA; color: #303133; font-weight: 600; }
-.el-tag { border-radius: 4px; }
+
+// Tables
+.el-table {
+  --el-table-border-color: var(--tf-border-color-lighter);
+  border-radius: var(--tf-radius-md);
+  overflow: hidden;
+
+  .el-table__header th {
+    background-color: var(--tf-bg-card-hover);
+    color: var(--tf-text-primary);
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .el-table__row {
+    transition: background-color var(--tf-transition-fast);
+  }
+}
+
+// Tags
+.el-tag {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+// Inputs
+.el-input {
+  .el-input__wrapper {
+    border-radius: var(--tf-radius-sm);
+    transition: box-shadow var(--tf-transition-fast);
+    &:focus-within {
+      box-shadow: 0 0 0 1px var(--tf-color-primary) inset, 0 0 0 3px rgba(22, 93, 255, 0.08);
+    }
+  }
+}
+
+.el-textarea__inner {
+  border-radius: var(--tf-radius-sm);
+  &:focus {
+    box-shadow: 0 0 0 1px var(--tf-color-primary) inset, 0 0 0 3px rgba(22, 93, 255, 0.08);
+  }
+}
+
+// Select
+.el-select-dropdown {
+  border-radius: var(--tf-radius-md);
+  box-shadow: var(--tf-shadow-hover);
+}
+
+// Empty state
+.el-empty {
+  padding: 40px 0;
+  .el-empty__description p {
+    color: var(--tf-text-secondary);
+  }
+}
+
+// Pagination
+.el-pagination {
+  .el-pager li {
+    border-radius: var(--tf-radius-sm);
+    transition: all var(--tf-transition-fast);
+    &.is-active {
+      background: var(--tf-color-primary);
+    }
+  }
+}
+
+// Badge
+.el-badge__content {
+  font-size: 11px;
+}
+
+// Avatar
+.el-avatar {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+// Message
+.el-message {
+  border-radius: var(--tf-radius-md);
+  box-shadow: var(--tf-shadow-hover);
+}

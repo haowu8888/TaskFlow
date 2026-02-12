@@ -37,6 +37,7 @@ export interface Task {
   creator?: User
   subtasks?: Subtask[]
   commentCount?: number
+  labels?: Label[]
   createdAt: string
   updatedAt: string
 }
@@ -110,6 +111,25 @@ export interface TaskDependency {
   predecessorTaskId: number
   successorTaskId: number
   dependencyType: string
+}
+
+export interface Label {
+  id: number
+  workspaceId: number
+  name: string
+  color: string
+  createdAt: string
+}
+
+export interface TaskActivity {
+  id: number
+  taskId: number
+  action: string
+  fieldName?: string
+  oldValue?: string
+  newValue?: string
+  createdAt: string
+  user: User
 }
 
 export interface ApiResponse<T> {

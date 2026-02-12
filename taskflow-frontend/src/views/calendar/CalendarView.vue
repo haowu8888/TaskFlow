@@ -14,6 +14,7 @@
       <FullCalendar ref="calendarRef" :options="calendarOptions" />
     </el-card>
     <TaskDetailDrawer v-model="showDetail" :task-id="selectedTaskId" @updated="refetchEvents" @deleted="refetchEvents" />
+    <TaskCreateModal v-model="showCreate" :initial-due-date="createDate" @created="handleTaskCreated" />
   </div>
 </template>
 
@@ -26,22 +27,27 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import type { CalendarOptions, EventClickArg } from '@fullcalendar/core'
 import TaskDetailDrawer from '@/components/task/TaskDetailDrawer.vue'
+import TaskCreateModal from '@/components/task/TaskCreateModal.vue'
 import { useWorkspaceStore } from '@/stores/workspace'
+import { useTaskStore } from '@/stores/task'
 import { taskApi } from '@/api/task'
 import type { Task } from '@/types'
 
 const workspaceStore = useWorkspaceStore()
+const taskStore = useTaskStore()
 const { t } = useI18n()
 const calendarRef = ref<InstanceType<typeof FullCalendar>>()
 const currentView = ref('dayGridMonth')
 const showDetail = ref(false)
+const showCreate = ref(false)
 const selectedTaskId = ref(0)
+const createDate = ref('')
 
 const priorityColors: Record<string, string> = {
-  URGENT: '#F56C6C',
-  HIGH: '#E6A23C',
-  MEDIUM: '#409EFF',
-  LOW: '#909399'
+  URGENT: '#f53f3f',
+  HIGH: '#ff7d00',
+  MEDIUM: '#165DFF',
+  LOW: '#86909c'
 }
 
 const calendarOptions = computed<CalendarOptions>(() => ({
@@ -58,6 +64,7 @@ const calendarOptions = computed<CalendarOptions>(() => ({
   events: fetchEvents,
   eventClick: handleEventClick,
   eventDrop: handleEventDrop,
+  dateClick: handleDateClick,
   eventDidMount: (info) => {
     info.el.title = info.event.title
   }
@@ -77,8 +84,8 @@ async function fetchEvents(fetchInfo: any, successCallback: Function, failureCal
       title: task.title,
       start: task.startDate || task.dueDate,
       end: task.dueDate,
-      backgroundColor: priorityColors[task.priority] || '#409EFF',
-      borderColor: priorityColors[task.priority] || '#409EFF',
+      backgroundColor: priorityColors[task.priority] || '#165DFF',
+      borderColor: priorityColors[task.priority] || '#165DFF',
       extendedProps: { task }
     }))
     successCallback(events)
@@ -97,11 +104,23 @@ async function handleEventDrop(info: any) {
   const newDate = info.event.startStr?.split('T')[0]
   if (taskId && newDate) {
     try {
-      await taskApi.update(taskId, { dueDate: newDate })
+      const res = await taskApi.update(taskId, { dueDate: newDate })
+      taskStore.updateTaskInList(taskId, res.data)
+      taskStore.notifyTaskChange()
     } catch {
       info.revert()
     }
   }
+}
+
+function handleDateClick(info: any) {
+  createDate.value = info.dateStr?.split('T')[0] || ''
+  showCreate.value = true
+}
+
+function handleTaskCreated() {
+  showCreate.value = false
+  refetchEvents()
 }
 
 function changeView(view: string) {
@@ -119,23 +138,45 @@ function refetchEvents() {
 }
 
 watch(() => workspaceStore.currentWorkspace, () => refetchEvents())
+watch(() => taskStore.taskEventVersion, () => refetchEvents())
 </script>
 
 <style lang="scss" scoped>
-.page-header { margin-bottom: 16px; }
-.page-title { font-size: 24px; }
+.page-header { margin-bottom: 20px; }
+.page-title { font-size: 24px; font-weight: 700; color: var(--tf-text-primary); }
 .flex-between { display: flex; justify-content: space-between; align-items: center; }
 .calendar-card {
   :deep(.fc) {
     font-family: inherit;
-    .fc-toolbar-title { font-size: 18px; }
+    .fc-toolbar-title { font-size: 18px; font-weight: 600; color: var(--tf-text-primary); }
     .fc-button-primary {
-      background-color: #409EFF;
-      border-color: #409EFF;
-      &:hover { background-color: #66b1ff; border-color: #66b1ff; }
+      background-color: var(--tf-color-primary);
+      border-color: var(--tf-color-primary);
+      border-radius: var(--tf-radius-sm);
+      font-weight: 500;
+      &:hover { opacity: 0.9; }
+      &:not(:disabled).fc-button-active {
+        background-color: var(--tf-color-primary);
+        border-color: var(--tf-color-primary);
+      }
     }
-    .fc-event { border-radius: 4px; padding: 2px 4px; font-size: 12px; cursor: pointer; }
-    .fc-daygrid-day:hover { background-color: #f5f7fa; }
+    .fc-event {
+      border-radius: 5px; padding: 2px 6px; font-size: 12px; cursor: pointer;
+      border: none; font-weight: 500;
+      transition: transform var(--tf-transition-fast), box-shadow var(--tf-transition-fast);
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      }
+    }
+    .fc-daygrid-day {
+      transition: background var(--tf-transition-fast);
+      &:hover { background-color: var(--tf-bg-card-hover); }
+    }
+    .fc-col-header-cell { color: var(--tf-text-secondary); font-weight: 600; }
+    .fc-day-today { background: var(--tf-color-primary-lighter) !important; }
+    .fc-scrollgrid { border-color: var(--tf-border-color-lighter); }
+    td, th { border-color: var(--tf-border-color-lighter); }
   }
 }
 </style>

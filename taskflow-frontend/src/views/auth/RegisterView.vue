@@ -51,6 +51,12 @@ async function handleRegister() {
 </script>
 
 <style lang="scss" scoped>
-.form-title { text-align: center; margin-bottom: 24px; font-size: 22px; color: #303133; }
-.form-footer { text-align: center; color: #909399; font-size: 14px; margin-top: 16px; }
+.form-title {
+  text-align: center; margin-bottom: 28px; font-size: 24px; font-weight: 600;
+  color: var(--tf-text-primary);
+}
+.form-footer {
+  text-align: center; color: var(--tf-text-secondary); font-size: 14px; margin-top: 20px;
+  a { font-weight: 500; }
+}
 </style>

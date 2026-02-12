@@ -74,7 +74,9 @@ export default {
     myTasks: 'My Tasks',
     noTasks: 'No tasks assigned to you',
     upcomingDeadlines: 'Upcoming Deadlines',
-    noDeadlines: 'No upcoming deadlines'
+    noDeadlines: 'No upcoming deadlines',
+    statusDistribution: 'Status Distribution',
+    priorityDistribution: 'Priority Distribution'
   },
   task: {
     title: 'Tasks',
@@ -107,7 +109,18 @@ export default {
     searchTasks: 'Search tasks...',
     sortBy: 'Sort by',
     created: 'Created',
-    noDate: '-'
+    noDate: '-',
+    boardColumn: 'Board Column',
+    selectBoardColumn: 'Select board column (optional)',
+    taskUpdated: 'Task updated',
+    commentUpdated: 'Comment updated',
+    dependencies: 'Dependencies',
+    blockedBy: 'Blocked by',
+    blocks: 'Blocks',
+    noDependencies: 'No dependencies',
+    searchTaskToLink: 'Search task to link...',
+    dependencyAdded: 'Dependency added',
+    dependencyRemoved: 'Dependency removed'
   },
   board: {
     title: 'Boards',
@@ -133,7 +146,11 @@ export default {
     columnAdded: 'Column added',
     columnUpdated: 'Column updated',
     columnDeleted: 'Column deleted',
-    wip: 'WIP'
+    wip: 'WIP',
+    editBoard: 'Edit Board',
+    boardUpdated: 'Board updated',
+    deleteBoardConfirm: 'Delete this board? All columns and task associations will be removed.',
+    boardDeleted: 'Board deleted'
   },
   calendar: {
     title: 'Calendar',
@@ -154,7 +171,18 @@ export default {
     email: 'Email',
     avatarUrl: 'Avatar URL',
     enterAvatarUrl: 'Enter avatar URL',
-    profileUpdated: 'Profile updated'
+    profileUpdated: 'Profile updated',
+    basicInfo: 'Basic Info',
+    security: 'Security',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm Password',
+    enterCurrentPassword: 'Enter current password',
+    enterNewPassword: 'Enter new password',
+    confirmNewPassword: 'Re-enter new password',
+    changePassword: 'Change Password',
+    passwordMismatch: 'Passwords do not match',
+    passwordChanged: 'Password changed successfully'
   },
   workspace: {
     title: 'Workspace Settings',
@@ -203,5 +231,24 @@ export default {
     admin: 'Admin',
     member: 'Member',
     viewer: 'Viewer'
+  },
+  search: {
+    placeholder: 'Search tasks...',
+    noResults: 'No tasks found',
+    navigate: 'Navigate',
+    select: 'Select'
+  },
+  label: {
+    labels: 'Labels',
+    addLabel: 'Add label',
+    searchOrCreate: 'Search or create label...',
+    create: 'Create'
+  },
+  activity: {
+    title: 'Activity',
+    created: 'created the task',
+    updated: 'updated',
+    deleted: 'deleted the task',
+    noActivities: 'No activity yet'
   }
 }

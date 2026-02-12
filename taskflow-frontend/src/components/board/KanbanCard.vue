@@ -43,16 +43,17 @@ function formatDate(date: string) {
 
 <style lang="scss" scoped>
 .kanban-card {
-  background: #fff;
-  border: 1px solid #E4E7ED;
-  border-radius: 8px;
-  padding: 12px;
+  background: var(--tf-bg-card);
+  border: 1px solid var(--tf-border-color-lighter);
+  border-radius: var(--tf-radius-md);
+  padding: 12px 14px;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition: all var(--tf-transition-fast);
 
   &:hover {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    border-color: #C0C4CC;
+    box-shadow: var(--tf-shadow-base);
+    border-color: var(--tf-border-color);
+    transform: translateY(-1px);
   }
 }
 
@@ -65,19 +66,23 @@ function formatDate(date: string) {
 
 .card-due {
   font-size: 12px;
-  color: #909399;
+  color: var(--tf-text-secondary);
+  background: var(--tf-bg-card-hover);
+  padding: 2px 6px;
+  border-radius: 4px;
 
   &.overdue {
-    color: #F56C6C;
-    font-weight: 500;
+    color: var(--tf-color-danger);
+    background: rgba(245, 63, 63, 0.08);
+    font-weight: 600;
   }
 }
 
 .card-title {
   font-size: 14px;
   font-weight: 500;
-  color: #303133;
-  line-height: 1.4;
+  color: var(--tf-text-primary);
+  line-height: 1.5;
   margin-bottom: 8px;
   word-break: break-word;
 }
@@ -96,7 +101,7 @@ function formatDate(date: string) {
 
 .assignee-name {
   font-size: 12px;
-  color: #909399;
+  color: var(--tf-text-secondary);
 }
 
 .card-assignee-placeholder {
@@ -111,6 +116,7 @@ function formatDate(date: string) {
 
 .progress-text {
   font-size: 11px;
-  color: #909399;
+  color: var(--tf-text-secondary);
+  font-weight: 500;
 }
 </style>

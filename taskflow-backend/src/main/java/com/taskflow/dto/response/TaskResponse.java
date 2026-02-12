@@ -34,4 +34,5 @@ public class TaskResponse {
     private UserResponse creator;
     private List<SubtaskResponse> subtasks;
     private Integer commentCount;
+    private List<LabelResponse> labels;
 }

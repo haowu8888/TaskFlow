@@ -9,6 +9,7 @@ import com.taskflow.exception.BusinessException;
 import com.taskflow.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/me")
     public ApiResponse<UserResponse> getCurrentUser() {
@@ -77,5 +79,35 @@ public class UserController {
                 .map(u -> new UserResponse(u.getId(), u.getUsername(), u.getEmail(), u.getAvatarUrl()))
                 .collect(Collectors.toList());
         return ApiResponse.success(responses);
+    }
+
+    @PutMapping("/me/password")
+    public ApiResponse<Void> changePassword(@RequestBody Map<String, String> request) {
+        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new BusinessException("User not found");
+        }
+
+        String currentPassword = request.get("currentPassword");
+        String newPassword = request.get("newPassword");
+
+        if (!StringUtils.hasText(currentPassword) || !StringUtils.hasText(newPassword)) {
+            throw new BusinessException("Current password and new password are required");
+        }
+
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new BusinessException("Current password is incorrect");
+        }
+
+        if (newPassword.length() < 6) {
+            throw new BusinessException("New password must be at least 6 characters");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setUpdatedAt(LocalDateTime.now());
+        userMapper.updateById(user);
+
+        return ApiResponse.success(null);
     }
 }

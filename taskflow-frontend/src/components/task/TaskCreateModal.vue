@@ -34,6 +34,26 @@
           </el-form-item>
         </el-col>
       </el-row>
+
+      <!-- Board Column Selector -->
+      <el-form-item :label="$t('task.boardColumn')" v-if="allBoardColumns.length > 0">
+        <el-select v-model="form.boardColumnId" :placeholder="$t('task.selectBoardColumn')" clearable style="width: 100%">
+          <el-option-group v-for="board in boardsWithColumns" :key="board.id" :label="board.name">
+            <el-option
+              v-for="col in board.columns"
+              :key="col.id"
+              :label="col.name"
+              :value="col.id"
+            >
+              <div class="column-option">
+                <span class="column-color-dot" :style="{ background: col.color || '#165DFF' }"></span>
+                <span>{{ col.name }}</span>
+              </div>
+            </el-option>
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+
       <el-row :gutter="16">
         <el-col :span="12">
           <el-form-item :label="$t('task.startDate')">
@@ -70,20 +90,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { useTaskStore } from '@/stores/task'
 import { useWorkspaceStore } from '@/stores/workspace'
+import { boardApi } from '@/api/board'
+import type { Board, BoardColumn } from '@/types'
 
 const { t } = useI18n()
-const props = defineProps<{ modelValue: boolean }>()
+const props = defineProps<{
+  modelValue: boolean
+  boardColumnId?: number
+  boardColumns?: BoardColumn[]
+  initialDueDate?: string
+}>()
 const emit = defineEmits(['update:modelValue', 'created'])
 
 const taskStore = useTaskStore()
 const workspaceStore = useWorkspaceStore()
 const formRef = ref<FormInstance>()
 const loading = ref(false)
+const fetchedBoards = ref<Board[]>([])
 
 const form = reactive({
   title: '',
@@ -92,18 +120,53 @@ const form = reactive({
   status: 'TODO',
   startDate: '',
   dueDate: '',
-  assigneeId: undefined as number | undefined
+  assigneeId: undefined as number | undefined,
+  boardColumnId: undefined as number | undefined
 })
 
 const rules = {
   title: [{ required: true, message: () => t('task.titleRequired'), trigger: 'blur' }]
 }
 
-watch(() => props.modelValue, (val) => {
-  if (val && workspaceStore.currentWorkspace) {
-    workspaceStore.fetchMembers(workspaceStore.currentWorkspace.id)
+// If parent provides boardColumns (board context), use those; otherwise use fetched boards
+const boardsWithColumns = computed(() => {
+  if (props.boardColumns && props.boardColumns.length > 0) {
+    return [{ id: 0, name: t('board.title'), columns: props.boardColumns }]
+  }
+  return fetchedBoards.value.filter(b => b.columns && b.columns.length > 0)
+})
+
+const allBoardColumns = computed(() => {
+  return boardsWithColumns.value.flatMap(b => b.columns || [])
+})
+
+watch(() => props.modelValue, async (val) => {
+  if (val) {
+    if (workspaceStore.currentWorkspace) {
+      workspaceStore.fetchMembers(workspaceStore.currentWorkspace.id)
+      // Load boards if not provided by parent
+      if (!props.boardColumns || props.boardColumns.length === 0) {
+        try {
+          const res = await boardApi.list(workspaceStore.currentWorkspace.id)
+          fetchedBoards.value = res.data
+        } catch {}
+      }
+    }
+    if (props.boardColumnId) {
+      form.boardColumnId = props.boardColumnId
+    }
+    if (props.initialDueDate) {
+      form.dueDate = props.initialDueDate
+    }
   }
 })
+
+function resetForm() {
+  Object.assign(form, {
+    title: '', description: '', priority: 'MEDIUM', status: 'TODO',
+    startDate: '', dueDate: '', assigneeId: undefined, boardColumnId: undefined
+  })
+}
 
 async function handleSubmit() {
   const valid = await formRef.value?.validate().catch(() => false)
@@ -117,22 +180,13 @@ async function handleSubmit() {
       status: form.status as any,
       startDate: form.startDate || undefined,
       dueDate: form.dueDate || undefined,
-      assigneeId: form.assigneeId || undefined
+      assigneeId: form.assigneeId || undefined,
+      boardColumnId: form.boardColumnId || undefined
     })
     ElMessage.success(t('task.taskCreated'))
-    Object.assign(form, {
-      title: '',
-      description: '',
-      priority: 'MEDIUM',
-      status: 'TODO',
-      startDate: '',
-      dueDate: '',
-      assigneeId: undefined
-    })
+    resetForm()
     emit('created')
-  } catch {
-    // Error handled by API interceptor
-  } finally {
+  } catch {} finally {
     loading.value = false
   }
 }
@@ -143,5 +197,16 @@ async function handleSubmit() {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+.column-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.column-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 </style>

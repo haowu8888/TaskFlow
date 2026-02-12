@@ -22,5 +22,8 @@ export const authApi = {
   },
   searchUsers(keyword: string) {
     return api.get<any, ApiResponse<User[]>>('/users/search', { params: { keyword } })
+  },
+  changePassword(data: { currentPassword: string; newPassword: string }) {
+    return api.put<any, ApiResponse<void>>('/users/me/password', data)
   }
 }

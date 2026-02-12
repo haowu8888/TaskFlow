@@ -1,97 +1,116 @@
 // Dark mode overrides
 html.dark {
-  --el-bg-color: #1a1a2e;
-  --el-bg-color-overlay: #16213e;
-  --el-bg-color-page: #0f0f23;
-  --el-text-color-primary: #e4e6eb;
-  --el-text-color-regular: #b0b3b8;
-  --el-text-color-secondary: #8a8d91;
-  --el-border-color: #3a3b3c;
-  --el-border-color-light: #2d2e30;
-  --el-fill-color-blank: #1a1a2e;
+  // TaskFlow CSS variables - dark values
+  --tf-bg-page: #0d1117;
+  --tf-bg-card: #161b22;
+  --tf-bg-card-hover: #1c2128;
+  --tf-bg-overlay: rgba(0, 0, 0, 0.7);
+  --tf-bg-sidebar: #010409;
+  --tf-bg-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --tf-bg-sidebar-active: rgba(56, 132, 255, 0.15);
 
-  background-color: #0f0f23;
-  color: #e4e6eb;
+  --tf-text-primary: #e6edf3;
+  --tf-text-regular: #b1bac4;
+  --tf-text-secondary: #7d8590;
+  --tf-text-placeholder: #484f58;
 
-  .app-header {
-    background: #1a1a2e;
-    border-bottom-color: #3a3b3c;
-  }
+  --tf-border-color: #30363d;
+  --tf-border-color-light: #21262d;
+  --tf-border-color-lighter: #1b1f24;
 
-  .page-content {
-    background-color: #0f0f23;
-  }
+  --tf-color-primary: #4493f8;
+  --tf-color-primary-light: rgba(56, 132, 255, 0.15);
+  --tf-color-primary-lighter: rgba(56, 132, 255, 0.08);
+  --tf-color-success: #3fb950;
+  --tf-color-warning: #d29922;
+  --tf-color-danger: #f85149;
 
-  .sidebar {
-    background: #0a0a1a;
-  }
+  --tf-shadow-base: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --tf-shadow-light: 0 1px 4px rgba(0, 0, 0, 0.3);
+  --tf-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --tf-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 6px -1px rgba(0, 0, 0, 0.2);
+
+  --tf-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --tf-gradient-blue: linear-gradient(135deg, #4493f8, #6cb6ff);
+  --tf-gradient-green: linear-gradient(135deg, #3fb950, #56d364);
+  --tf-gradient-orange: linear-gradient(135deg, #d29922, #e3b341);
+  --tf-gradient-red: linear-gradient(135deg, #f85149, #ff7b72);
+
+  // Element Plus overrides
+  --el-bg-color: #161b22;
+  --el-bg-color-overlay: #1c2128;
+  --el-bg-color-page: #0d1117;
+  --el-text-color-primary: #e6edf3;
+  --el-text-color-regular: #b1bac4;
+  --el-text-color-secondary: #7d8590;
+  --el-border-color: #30363d;
+  --el-border-color-light: #21262d;
+  --el-fill-color-blank: #161b22;
+  --el-color-primary: #4493f8;
+
+  background-color: var(--tf-bg-page);
+  color: var(--tf-text-primary);
 
   .el-card {
-    background: #1a1a2e;
-    border-color: #3a3b3c;
+    background: var(--tf-bg-card);
+    border-color: var(--tf-border-color);
   }
 
   .el-table {
-    --el-table-bg-color: #1a1a2e;
-    --el-table-tr-bg-color: #1a1a2e;
-    --el-table-header-bg-color: #16213e;
-    --el-table-row-hover-bg-color: #16213e;
-    --el-table-border-color: #3a3b3c;
+    --el-table-bg-color: var(--tf-bg-card);
+    --el-table-tr-bg-color: var(--tf-bg-card);
+    --el-table-header-bg-color: var(--tf-bg-card-hover);
+    --el-table-row-hover-bg-color: var(--tf-bg-card-hover);
+    --el-table-border-color: var(--tf-border-color);
   }
 
   .el-dialog {
-    background: #1a1a2e;
+    background: var(--tf-bg-card);
   }
 
   .el-drawer {
-    background: #1a1a2e;
+    background: var(--tf-bg-card);
   }
 
   .el-input__wrapper,
   .el-textarea__inner {
-    background-color: #16213e;
-    box-shadow: 0 0 0 1px #3a3b3c inset;
+    background-color: var(--tf-bg-card-hover);
+    box-shadow: 0 0 0 1px var(--tf-border-color) inset;
   }
 
   .el-select .el-input__wrapper {
-    background-color: #16213e;
+    background-color: var(--tf-bg-card-hover);
   }
 
-  .notification-item {
-    border-bottom-color: #3a3b3c;
-    &:hover { background: #16213e; }
-    &.unread { background: rgba(64, 158, 255, 0.1); }
+  .page-content {
+    background-color: var(--tf-bg-page);
   }
 
-  .gantt-header-row {
-    background: #1a1a2e;
-  }
-
-  .gantt-row:hover {
-    background: #16213e;
-  }
-
-  .gantt-day-header.weekend,
-  .gantt-cell.weekend {
-    background: #16213e;
+  .sidebar {
+    background: var(--tf-bg-sidebar);
   }
 
   .workspace-item {
-    &:hover { background: #16213e; }
-    &.active { background: rgba(64, 158, 255, 0.15); }
+    &:hover { background: var(--tf-bg-sidebar-hover); }
+    &.active { background: var(--tf-bg-sidebar-active); }
   }
 
   .search-result-item:hover {
-    background: #16213e;
+    background: var(--tf-bg-card-hover);
   }
 
-  // Kanban dark overrides
-  .kanban-column {
-    background: #16213e;
+  // Auth layout dark mode
+  .auth-layout {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1040 100%);
   }
-
-  .kanban-card {
-    background: #1a1a2e;
-    border-color: #3a3b3c;
+  .auth-card {
+    background: var(--tf-bg-card);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+  .auth-logo {
+    color: #e6edf3;
+  }
+  .auth-subtitle {
+    color: rgba(230, 237, 243, 0.6);
   }
 }
