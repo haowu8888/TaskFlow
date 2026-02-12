@@ -1,3 +1,4 @@
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\TaskActivityMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\Comment.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\exception\BusinessException.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\UserService.java
@@ -5,10 +6,12 @@ D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\Ta
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\LoginRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\NotificationService.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\TaskDependency.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\TaskActivityResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\User.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\NotificationMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\NotificationResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\enums\NotificationType.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\Label.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\Task.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\AuthService.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\AuthResponse.java
@@ -23,6 +26,7 @@ D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\Comment
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\WorkspaceCreateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\SubtaskUpdateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\RefreshToken.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\TaskActivityController.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\ApiResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\websocket\TaskWebSocketHandler.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\BoardCreateRequest.java
@@ -35,13 +39,18 @@ D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\A
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\SubtaskController.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\TaskResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\TaskServiceImpl.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\LabelServiceImpl.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\enums\TaskStatus.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\WorkspaceMemberMapper.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\TaskActivityServiceImpl.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\UserMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\BoardMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\WorkspaceServiceImpl.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\LabelUpdateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\RefreshTokenMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\BoardService.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\TaskActivity.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\LabelResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\NotificationController.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\Workspace.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\TaskDependencyService.java
@@ -59,12 +68,14 @@ D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\C
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\RegisterRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\CommentService.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\BoardServiceImpl.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\LabelCreateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\TaskListResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\Subtask.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\security\JwtTokenProvider.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\CommentResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\WorkspaceUpdateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\WorkspaceMemberResponse.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\LabelService.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\BoardColumnCreateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\BoardColumnMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\TaskController.java
@@ -72,6 +83,7 @@ D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\Bo
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\SubtaskService.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\config\SecurityConfig.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\BoardColumnReorderRequest.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\TaskLabel.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\WorkspaceService.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\TaskDependencyController.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\UserServiceImpl.java
@@ -81,6 +93,7 @@ D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\Workspa
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\MemberInviteRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\MemberRoleUpdateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\SubtaskMapper.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\TaskLabelMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\TaskflowApplication.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\SubtaskResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\TaskMoveRequest.java
@@ -89,8 +102,11 @@ D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\TaskSe
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\SubtaskReorderRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\response\UserResponse.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\WorkspaceController.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\LabelController.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\BoardColumn.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\impl\NotificationServiceImpl.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\service\TaskActivityService.java
+D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\mapper\LabelMapper.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\entity\Notification.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\dto\request\TaskCreateRequest.java
 D:\vscodeApp\TaskFlow\taskflow-backend\src\main\java\com\taskflow\controller\AuthController.java
