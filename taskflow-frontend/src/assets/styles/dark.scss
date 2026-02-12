@@ -1,0 +1,97 @@
+// Dark mode overrides
+html.dark {
+  --el-bg-color: #1a1a2e;
+  --el-bg-color-overlay: #16213e;
+  --el-bg-color-page: #0f0f23;
+  --el-text-color-primary: #e4e6eb;
+  --el-text-color-regular: #b0b3b8;
+  --el-text-color-secondary: #8a8d91;
+  --el-border-color: #3a3b3c;
+  --el-border-color-light: #2d2e30;
+  --el-fill-color-blank: #1a1a2e;
+
+  background-color: #0f0f23;
+  color: #e4e6eb;
+
+  .app-header {
+    background: #1a1a2e;
+    border-bottom-color: #3a3b3c;
+  }
+
+  .page-content {
+    background-color: #0f0f23;
+  }
+
+  .sidebar {
+    background: #0a0a1a;
+  }
+
+  .el-card {
+    background: #1a1a2e;
+    border-color: #3a3b3c;
+  }
+
+  .el-table {
+    --el-table-bg-color: #1a1a2e;
+    --el-table-tr-bg-color: #1a1a2e;
+    --el-table-header-bg-color: #16213e;
+    --el-table-row-hover-bg-color: #16213e;
+    --el-table-border-color: #3a3b3c;
+  }
+
+  .el-dialog {
+    background: #1a1a2e;
+  }
+
+  .el-drawer {
+    background: #1a1a2e;
+  }
+
+  .el-input__wrapper,
+  .el-textarea__inner {
+    background-color: #16213e;
+    box-shadow: 0 0 0 1px #3a3b3c inset;
+  }
+
+  .el-select .el-input__wrapper {
+    background-color: #16213e;
+  }
+
+  .notification-item {
+    border-bottom-color: #3a3b3c;
+    &:hover { background: #16213e; }
+    &.unread { background: rgba(64, 158, 255, 0.1); }
+  }
+
+  .gantt-header-row {
+    background: #1a1a2e;
+  }
+
+  .gantt-row:hover {
+    background: #16213e;
+  }
+
+  .gantt-day-header.weekend,
+  .gantt-cell.weekend {
+    background: #16213e;
+  }
+
+  .workspace-item {
+    &:hover { background: #16213e; }
+    &.active { background: rgba(64, 158, 255, 0.15); }
+  }
+
+  .search-result-item:hover {
+    background: #16213e;
+  }
+
+  // Kanban dark overrides
+  .kanban-column {
+    background: #16213e;
+  }
+
+  .kanban-card {
+    background: #1a1a2e;
+    border-color: #3a3b3c;
+  }
+}

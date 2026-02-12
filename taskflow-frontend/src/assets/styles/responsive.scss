@@ -1,0 +1,88 @@
+// Responsive breakpoints
+// Tablet: <= 768px
+// Mobile: <= 480px
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 64px !important;
+    .sidebar-header .logo { display: none; }
+    .workspace-switcher { display: none; }
+    .sidebar-menu {
+      :deep(.el-menu-item .el-menu-item__content span) { display: none; }
+    }
+  }
+
+  .main-content {
+    margin-left: 64px !important;
+  }
+
+  .page-content {
+    padding: 12px !important;
+  }
+
+  .page-title {
+    font-size: 20px !important;
+  }
+
+  // Stack workspace settings columns
+  .workspace-settings-view {
+    .el-row { flex-direction: column; }
+    .el-col { max-width: 100% !important; flex: 0 0 100% !important; }
+  }
+
+  // Dashboard grid
+  .dashboard-stats {
+    .el-col { max-width: 50% !important; flex: 0 0 50% !important; }
+  }
+
+  // Gantt chart
+  .gantt-task-info, .gantt-task-info-header {
+    min-width: 140px !important;
+    max-width: 140px !important;
+  }
+
+  // Hide breadcrumb text overflow
+  .el-breadcrumb { max-width: 200px; overflow: hidden; }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    display: none !important;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  .app-header {
+    padding: 0 12px !important;
+  }
+
+  .username {
+    display: none;
+  }
+
+  .page-content {
+    padding: 8px !important;
+  }
+
+  .page-title {
+    font-size: 18px !important;
+  }
+
+  // Dashboard stats single column
+  .dashboard-stats {
+    .el-col { max-width: 100% !important; flex: 0 0 100% !important; }
+  }
+
+  // Full width task filters
+  .task-filters {
+    flex-direction: column;
+    .el-select, .el-input { width: 100% !important; }
+  }
+
+  // Board list single column
+  .board-grid {
+    .el-col { max-width: 100% !important; flex: 0 0 100% !important; }
+  }
+}
